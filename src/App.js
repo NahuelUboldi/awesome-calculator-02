@@ -7,15 +7,46 @@ import { useState} from "react"
 function App() {
   const [expression, setExpression] = useState("")
   const [answer, setAnswer] = useState(0)
+  const [isExpLastNum, setIsExpLastNum] = useState(false)
+  const [isSymNum, setIsSymNum] = useState(false)
 
   const display = (sym) => {
-    setExpression(prev => prev + sym)
+    setIsExpLastNum(/[0-9.]/.test(expression[expression.length -1]))
+    setIsSymNum(/[0-9.]/.test(sym));
+
+    console.log(isExpLastNum, isSymNum);
+    if (!isExpLastNum && !isSymNum) {
+      setExpression(prev => {
+        let sliced = prev.slice("0",prev.length-1)
+        console.log(sliced);
+        return sliced + sym
+      })
+    } else {
+      setExpression(prev => prev + sym);
+      
+    }
+
+    if (expression[expression.length - 1] === "=") {
+      if(/[0-9.]/.test(sym)) {
+        setExpression(sym)
+      } else {
+        setExpression(answer + sym)
+      }
+    }
+
   }
   const calculate = () => {
+
     setAnswer(eval(expression))
+    setExpression(prev => prev + "=")
   }
 
-  const clear = () => {};
+  const clear = () => {
+    setExpression("")
+    setAnswer(0)
+    isExpLastNum(false)
+    isSymNum(false)
+  };
 
   return (
     <div className='App'>
@@ -26,7 +57,7 @@ function App() {
             <div className='expression fs-6 text-warning'>{expression}</div>
             <div id='display' className="fs-4 text-">{answer}</div>
           </div>
-          <button type='button' onClick={() => clear} className='btn btn-secondary clear' id='clear'>
+          <button type='button' onClick={() => clear()} className='btn btn-secondary clear' id='clear'>
             AC
           </button>
           <button
