@@ -10,20 +10,25 @@ function App() {
   
   const display = (sym) => {
     let isExpLastDigitNumber = /[0-9.]/.test(expression[expression.length - 1])
-    let isInputLastDigitNumber = /[0-9.]/.test(sym)
-    let isInputLastDigitNegativeSign = /[-]/.test(sym);
-
-    if (isInputLastDigitNumber || isInputLastDigitNegativeSign) {
-
-      if (fullInput[0] === "-" && sym === "-") {
-        return
-      }
-      let tested = /[.]g/.test(fullInput)
-      if (sym === "." ) {
+    let isInputNumber = /[0-9.]/.test(sym)
+    let isInputNegativeSign = /[-]/.test(sym);
+    let hasFullInputDecimal = /[.]/.test(fullInput);
+    let hasFullInputNegativeSign = /[-]/.test(fullInput);
+    
+    if (isInputNumber || (isInputNegativeSign && !hasFullInputNegativeSign)) {
+      if (
+        (fullInput[0] === '-' && sym === '-') ||
+        (sym === '.' && hasFullInputDecimal)
+      ) {
+      return
+      } else {
         setFullInput((prev) => prev + sym);
-
       }
-   
+    }
+    if (!isInputNumber) {
+      
+    
+    
     
     }
 
@@ -40,7 +45,7 @@ function App() {
       }
     }
  
-    if (!isExpLastDigitNumber && !isInputLastDigitNumber) {
+    if (!isExpLastDigitNumber && !isInputNumber) {
       setExpression((prev) => {
         let sliced = prev.slice('0', prev.length - 1);
         return sliced + sym;
@@ -50,7 +55,7 @@ function App() {
     }
   
     if (expression[expression.length - 1] === "=") {
-      if(isInputLastDigitNumber) {
+      if(isInputNumber) {
         setExpression(sym)
       } else {
         setExpression(answer + sym)
@@ -58,6 +63,11 @@ function App() {
     }
     
   }
+
+
+
+
+  
   const calculate = () => {
     let isExpLastDigitNumber = /[0-9.]/.test(expression[expression.length - 1]);
     if (isExpLastDigitNumber) {
@@ -69,6 +79,7 @@ function App() {
   const clear = () => {
     setExpression("")
     setAnswer(0)
+    setFullInput("")
 
   };
 
