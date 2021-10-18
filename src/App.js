@@ -3,50 +3,75 @@ import './App.css';
 import { useState} from "react"
 
 
-
 function App() {
   const [expression, setExpression] = useState("")
-  const [answer, setAnswer] = useState(0)
-  const [isExpLastNum, setIsExpLastNum] = useState(false)
-  const [isSymNum, setIsSymNum] = useState(false)
-
+  const [fullInput, setFullInput] = useState("")
+  const [answer, setAnswer] = useState("")
+  
   const display = (sym) => {
-    setIsExpLastNum(/[0-9.]/.test(expression[expression.length -1]))
-    setIsSymNum(/[0-9.]/.test(sym));
+    let isExpLastDigitNumber = /[0-9.]/.test(expression[expression.length - 1])
+    let isInputLastDigitNumber = /[0-9.]/.test(sym)
+    let isInputLastDigitNegativeSign = /[-]/.test(sym);
 
-    console.log(isExpLastNum, isSymNum);
-    if (!isExpLastNum && !isSymNum) {
-      setExpression(prev => {
-        let sliced = prev.slice("0",prev.length-1)
-        console.log(sliced);
-        return sliced + sym
-      })
-    } else {
-      setExpression(prev => prev + sym);
-      
+    if (isInputLastDigitNumber || isInputLastDigitNegativeSign) {
+
+      if (fullInput[0] === "-" && sym === "-") {
+        return
+      }
+      let tested = /[.]g/.test(fullInput)
+      if (sym === "." ) {
+        setFullInput((prev) => prev + sym);
+
+      }
+   
+    
     }
 
+    
+
+
+
+
+    if (!/[0-9.-]/.test(sym)) {
+      setAnswer((prev) => prev + sym)
+
+      if (expression.length === 0 || expression[0] === "-") {
+        return;
+      }
+    }
+ 
+    if (!isExpLastDigitNumber && !isInputLastDigitNumber) {
+      setExpression((prev) => {
+        let sliced = prev.slice('0', prev.length - 1);
+        return sliced + sym;
+      });
+    } else {
+      setExpression((prev) => prev + sym);
+    }
+  
     if (expression[expression.length - 1] === "=") {
-      if(/[0-9.]/.test(sym)) {
+      if(isInputLastDigitNumber) {
         setExpression(sym)
       } else {
         setExpression(answer + sym)
       }
     }
-
+    
   }
   const calculate = () => {
-
-    setAnswer(eval(expression))
-    setExpression(prev => prev + "=")
+    let isExpLastDigitNumber = /[0-9.]/.test(expression[expression.length - 1]);
+    if (isExpLastDigitNumber) {
+      setAnswer(eval(expression))
+      setExpression(prev => prev + "=")
+    } 
   }
-
+  
   const clear = () => {
     setExpression("")
     setAnswer(0)
-    isExpLastNum(false)
-    isSymNum(false)
+
   };
+
 
   return (
     <div className='App'>
@@ -54,8 +79,8 @@ function App() {
         <h1 className='h1 mb-5'>Awesome calculator 2</h1>
         <div className='grid pb-5'>
           <div className='display alert alert-dismissible alert-primary'>
-            <div className='expression fs-6 text-warning'>{expression}</div>
-            <div id='display' className="fs-4 text-">{answer}</div>
+            <div className='expression fs-4 text-warning'>{expression}</div>
+            <div id='display' className="fs-4 text-">input: {fullInput} || answer: {answer}</div>
           </div>
           <button type='button' onClick={() => clear()} className='btn btn-secondary clear' id='clear'>
             AC
