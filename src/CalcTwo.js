@@ -12,93 +12,62 @@ function CalcTwo() {
     setFormula("")
   };
   const handleCalculate = () => {
-    
-    console.log('--------------------------');
    let result = eval(formula + display)
-   console.log('formula: ' + formula);
-   console.log('display: ' + display);
-   console.log("result: " + result);
-   console.log(typeof(result));
    setDisplay(JSON.stringify(result));
    setFormula("")
   };
   const handleInput = (input) => {
-    console.log("--------------------------");
     const isNumber = /[0-9]/.test(input);
     const isZero = /0/.test(input);
     const isOperator = /[^0-9.]/.test(input);
     const isNegativeSign = /-/.test(input);
     const isDecimalSign = /[.]/.test(input);
 
-    const hasDisplayNotNumbers = /[^0-9]/.test(display)
     const hasDisplayNegativeSign = /[-]/.test(display)
     const hasDisplayDecimal = /[.]/.test(display);
 
     const doesFormulaEndsWithOperator = /[^0-9.]$/.test(formula);
-
     setPlaceholder(input)
-    // console.log("isNumber " + isNumber);
-    // console.log('isZero ' + isZero);
-    // console.log('isOperator ' + isOperator);
-    // console.log('isNegativeSign ' + isNegativeSign);
-    // console.log('isDecimalSign ' + isDecimalSign);
-    // console.log('hasDisplayNegativeSign ' + hasDisplayNegativeSign);
-    // console.log('hasDisplayDecimal ' + hasDisplayDecimal);
-    // console.log("display.length " + display.length);
-    // console.log('doesFormulaEndsWithOperator ' + doesFormulaEndsWithOperator);
-
 
     if (isDecimalSign && hasDisplayDecimal) {
-     console.log(1);
       return
     }
     
     if (isZero && (display.length >= 1 && !hasDisplayNegativeSign)) {
-      console.log(1.5);
       setDisplay((prev) => prev + input);
       return
     }
 
     if (display.length === 0) {
-      console.log(1.6);
       if (isZero) return
       if (isOperator && !doesFormulaEndsWithOperator) {
-        console.log(1.8);
         if (isNegativeSign && display.length === 0) {
-          console.log(1.85);
           setDisplay(prev => prev + input)
           return
         }
         return
       }
       if ((isOperator && !isNegativeSign) && doesFormulaEndsWithOperator) {
-        console.log(1.9);
         let sliced = formula.slice('0', formula.length - 1);
         setFormula(prev => sliced + input)
         return
       }
-
     }
 
     if (isDecimalSign && (display.length === 0 || (display.length === 1 && hasDisplayNegativeSign))) {
-      console.log(3);
       setDisplay((prev) => prev + '0.');
       return
     }
     if (isNegativeSign && display.length === 0) {
-      console.log(4);
       setDisplay(prev => prev + input)
       return
     }
     if (isNumber || isZero || isDecimalSign) {
-      console.log(5);
-      setDisplay((prev) => prev + input)
+       setDisplay((prev) => prev + input)
       return
     }
     if (isOperator && display.length >= 1) {
-      console.log(6);
       if (display.length === 1 && hasDisplayNegativeSign) {
-        console.log(6.1);
         if(doesFormulaEndsWithOperator) {
           let sliced = formula.slice('0', formula.length - 1);
           setFormula((prev) => sliced + input);
@@ -112,10 +81,6 @@ function CalcTwo() {
       setDisplay ("")
       return
     }
-    console.log(7);
-    console.log("display " + display);
-    console.log("formula " + formula);
-    console.log("placeholder " + placeholder);
   };
 
   return (
